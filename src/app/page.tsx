@@ -6,7 +6,7 @@ import { Filter } from 'lucide-react' // Add this import
 
 // Fetch assets from the API endpoint
 async function fetchAssets() {
-  const res = await fetch('http://localhost:3000/api/assets', { cache: 'no-store' })
+  const res = await fetch('http://localhost:3000/api/assets')
   if (!res.ok) {
     throw new Error('Failed to fetch assets')
   }
