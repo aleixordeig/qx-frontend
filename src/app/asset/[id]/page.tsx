@@ -20,12 +20,24 @@ export default function AssetPage({ params }: { params: { id: string } }) {
   const [offerPrice, setOfferPrice] = useState('')
   const [sellOrders, setSellOrders] = useState([])
   const [buyOrders, setBuyOrders] = useState([])
+  const [latestPrice, setLatestPrice] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
- 
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null) // New state for current price
+
   useEffect(() => {
-    fetchSellOrders(params.id)
-    fetchBuyOrders(params.id)
+    const fetchData = async () => {
+      try {
+        await fetchLatestStats()
+        await fetchSellOrders(params.id)
+        await fetchBuyOrders(params.id)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, [params.id])
 
   const fetchSellOrders = async (name: string) => {
@@ -34,10 +46,12 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       const data = await response.json()
       console.log('Sell Orders:', data); // Log the data to verify
       setSellOrders(data)
+      if (data.length > 0) {
+        const firstOrder = data[0]
+        setCurrentPrice(firstOrder.price * firstOrder.numberOfShares * latestPrice)
+      }
     } catch (error) {
       console.error('Error fetching sell orders:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -49,8 +63,16 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       setBuyOrders(data)
     } catch (error) {
       console.error('Error fetching buy orders:', error)
-    } finally {
-      setLoading(false)
+    }
+  }
+
+  const fetchLatestStats = async () => {
+    try {
+      const response = await fetch('/api/latestStats')
+      const data = await response.json()
+      setLatestPrice(data.price)
+    } catch (error) {
+      console.error('Error fetching latest stats:', error)
     }
   }
 
@@ -94,7 +116,6 @@ export default function AssetPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           <div className="mb-4">
-            <h2 className="text-2xl font-semibold mb-2">Current Price: $1,000</h2>
             <div className="flex space-x-2">
               <Button onClick={handleBuy}>Buy Now</Button>
               <Input
@@ -141,7 +162,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                     <TableRow key={order.entityId}>
                       <TableCell>{order.price} Qubics</TableCell>
                       <TableCell>{order.numberOfShares}</TableCell>
-                      <TableCell>{order.price * order.numberOfShares} Qubics</TableCell>
+                      <TableCell>${order.price * order.numberOfShares * latestPrice} USD</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -166,9 +187,9 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                 <TableBody>
                   {buyOrders.map((order: { entityId: string; price: number; numberOfShares: number }) => (
                     <TableRow key={order.entityId}>
-                      <TableCell>{order.price}</TableCell>
+                      <TableCell>{order.price} Qubics</TableCell>
                       <TableCell>{order.numberOfShares}</TableCell>
-                      <TableCell>{order.price * order.numberOfShares}</TableCell>
+                      <TableCell>${order.price * order.numberOfShares * latestPrice} USD</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
