@@ -232,6 +232,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                     <TableHead>Qubic</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>Total</TableHead>
+                    <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -239,7 +240,12 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                     <TableRow key={order.entityId}>
                       <TableCell>{order.price} Qubics</TableCell>
                       <TableCell>{order.numberOfShares}</TableCell>
-                      <TableCell>${order.price * order.numberOfShares * latestPrice} USD</TableCell>
+                      <TableCell>${(order.price * order.numberOfShares * latestPrice).toFixed((order.price * order.numberOfShares * latestPrice) % 1 === 0 ? 0 : 2)} USD</TableCell>
+                      <TableCell>
+                        <Button onClick={handleBuy}>
+                          <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -266,7 +272,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                     <TableRow key={order.entityId}>
                       <TableCell>{order.price} Qubics</TableCell>
                       <TableCell>{order.numberOfShares}</TableCell>
-                      <TableCell>${order.price * order.numberOfShares * latestPrice} USD</TableCell>
+                      <TableCell>${(order.price * order.numberOfShares * latestPrice).toFixed((order.price * order.numberOfShares * latestPrice) % 1 === 0 ? 0 : 2)} USD</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
