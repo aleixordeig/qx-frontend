@@ -45,7 +45,7 @@ export default async function Component() {
                 <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <h2 className="text-xl font-semibold mb-2">{asset.name}</h2>
                   <div className="flex justify-between items-center">
-                    <span className="font-bold">${asset.price}</span>
+                    <span className="font-bold">$10b</span>
                     <Button>View Details</Button>
                   </div>
                 </div>
