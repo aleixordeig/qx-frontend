@@ -17,6 +17,9 @@ async function fetchAssets() {
 export default async function Component() {
   const assets = await fetchAssets()
 
+  // Filter assets to only show those with the specified issuer
+  const filteredAssets = assets.filter((asset: any) => asset.issuer === 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB');
+
   return (
     <>
       <Navigation />
@@ -41,7 +44,7 @@ export default async function Component() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assets.map((asset: any) => (
+            {filteredAssets.map((asset: any) => (
               <Link key={asset.name} href={`/asset/${encodeURIComponent(asset.name)}`}>
                 <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <h2 className="text-xl font-semibold mb-2">{asset.name}</h2>
