@@ -56,8 +56,9 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       console.log('Sell Orders:', data); // Log the data to verify
       setSellOrders(data)
       if (data.length > 0) {
-        const firstOrder = data[0]
-        setCurrentPrice(firstOrder.price * firstOrder.numberOfShares * latestPrice)
+        const lowestOrder = data.reduce((minOrder: any, order: any) => 
+          order.price < minOrder.price ? order : minOrder, data[0])
+        setCurrentPrice(lowestOrder.price * lowestOrder.numberOfShares * latestPrice)
       }
     } catch (error) {
       console.error('Error fetching sell orders:', error)
@@ -106,7 +107,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto p-4">
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h1 className="text-3xl font-bold mb-2">Asset {params.id}</h1>
-          <h2 className="text-2xl font-semibold mb-4">Current Price: ${currentPrice?.toFixed(2) || 'N/A'}</h2>
+          <h2 className="text-2xl font-semibold mb-4">Current Price: ${currentPrice || 'N/A'}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
@@ -228,7 +229,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Price</TableHead>
+                    <TableHead>Qubic</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>Total</TableHead>
                   </TableRow>
@@ -255,7 +256,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Price</TableHead>
+                  <TableHead>Qubic</TableHead>
                   <TableHead>Quantity</TableHead>
                   <TableHead>Total</TableHead>
                 </TableRow>
