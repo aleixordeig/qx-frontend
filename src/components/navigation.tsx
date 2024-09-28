@@ -47,7 +47,7 @@ export default function Navigation() {
         </div>
         
         {/* Middle - Search box */}
-        <div className="flex-1 px-4">
+        <div className="hidden">
           <div className="relative">
             <Input
               type="search"
