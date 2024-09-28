@@ -1,17 +1,21 @@
-
-import { Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Navigation from "@/components/navigation"
+import Link from "next/link"
+import { Filter } from 'lucide-react' // Add this import
 
-export default function Component() {
+// Fetch assets from the API endpoint
+async function fetchAssets() {
+  const res = await fetch('http://localhost:3000/api/assets', { cache: 'no-store' })
+  if (!res.ok) {
+    throw new Error('Failed to fetch assets')
+  }
+  return res.json()
+}
+
+export default async function Component() {
+  const assets = await fetchAssets()
+
   return (
     <>
       <Navigation />
@@ -36,17 +40,16 @@ export default function Component() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((asset) => (
-              <div key={asset} className="border rounded-lg p-4 shadow-sm">
-                <h2 className="text-xl font-semibold mb-2">Asset {asset}</h2>
-                <p className="text-gray-600 mb-4">
-                  Description of Asset {asset}...
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold">$XXX.XX</span>
-                  <Button>View Details</Button>
+            {assets.map((asset: any) => (
+              <Link key={asset.name} href={`/asset/${encodeURIComponent(asset.name)}`}>
+                <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <h2 className="text-xl font-semibold mb-2">{asset.name}</h2>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold">${asset.price}</span>
+                    <Button>View Details</Button>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </main>

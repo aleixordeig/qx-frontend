@@ -12,11 +12,6 @@ export default function Navigation() {
           <Link href="/" className="text-2xl font-bold">
             QX
           </Link>
-          <div className="hidden md:flex space-x-4">
-            <Link href="/tokens" className="hover:text-gray-300 transition-colors">
-              Tokens
-            </Link>
-          </div>
         </div>
 
         {/* Middle - Search box */}
