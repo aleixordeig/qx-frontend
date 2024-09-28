@@ -13,9 +13,6 @@ export default function Navigation() {
             QX
           </Link>
           <div className="hidden md:flex space-x-4">
-            <Link href="/assets" className="hover:text-gray-300 transition-colors">
-              Assets
-            </Link>
             <Link href="/tokens" className="hover:text-gray-300 transition-colors">
               Tokens
             </Link>
@@ -27,7 +24,7 @@ export default function Navigation() {
           <div className="relative">
             <Input
               type="search"
-              placeholder="Search items, collections, and accounts"
+              placeholder="Search assets"
               className="w-full bg-gray-800 text-white border-gray-700 focus:border-gray-600"
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -40,7 +37,7 @@ export default function Navigation() {
             <User className="h-5 w-5" />
           </Button>
           <Button variant="outline" className="hidden md:inline-flex bg-blue-500 text-white">
-            Login
+            Connect Wallet
           </Button>
         </div>
       </div>

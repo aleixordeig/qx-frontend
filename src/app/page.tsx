@@ -17,6 +17,7 @@ export default function Component() {
       <Navigation />
       <div className="container mx-auto p-4">
         <main>
+          <h1 className="text-3xl font-bold mb-4">Marketplace of Asset</h1>
           <div className="flex items-center space-x-4 mb-8">
             <Select>
               <SelectTrigger className="w-[180px]">
