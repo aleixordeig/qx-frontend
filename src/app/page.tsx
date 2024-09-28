@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { Search, Filter } from "lucide-react"
+
+import { Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
 import {
   Select,
   SelectContent,
@@ -17,7 +17,7 @@ export default function Component() {
       <Navigation />
       <div className="container mx-auto p-4">
         <main>
-          <h1 className="text-3xl font-bold mb-4">Marketplace of Asset</h1>
+          <h1 className="text-3xl font-bold mb-4">Marketplace of Assets</h1>
           <div className="flex items-center space-x-4 mb-8">
             <Select>
               <SelectTrigger className="w-[180px]">
@@ -29,7 +29,7 @@ export default function Component() {
                 <SelectItem value="1m">Last 1 month</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline">
+            <Button variant="outline" disabled>
               <Filter className="w-4 h-4 mr-2" />
               More Filters
             </Button>

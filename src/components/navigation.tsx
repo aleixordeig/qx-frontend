@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, ShoppingCart, User } from 'lucide-react'
+import { Search, User } from 'lucide-react'
 
 export default function Navigation() {
   return (
