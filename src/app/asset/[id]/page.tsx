@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,6 +18,41 @@ import Navigation from "@/components/navigation"
 export default function AssetPage({ params }: { params: { id: string } }) {
   const [price, setPrice] = useState('')
   const [offerPrice, setOfferPrice] = useState('')
+  const [sellOrders, setSellOrders] = useState([])
+  const [buyOrders, setBuyOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+ 
+  useEffect(() => {
+    fetchSellOrders(params.id)
+    fetchBuyOrders(params.id)
+  }, [params.id])
+
+  const fetchSellOrders = async (name: string) => {
+    try {
+      const response = await fetch(`/api/sellOrders?name=${name}`)
+      const data = await response.json()
+      console.log('Sell Orders:', data); // Log the data to verify
+      setSellOrders(data)
+    } catch (error) {
+      console.error('Error fetching sell orders:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchBuyOrders = async (name: string) => {
+    try {
+      const response = await fetch(`/api/buyOrders?name=${name}`)
+      const data = await response.json()
+      console.log('Buy Orders:', data); // Log the data to verify
+      setBuyOrders(data)
+    } catch (error) {
+      console.error('Error fetching buy orders:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleList = () => {
     console.log(`Listing asset for ${price}`)
@@ -88,30 +123,38 @@ export default function AssetPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <h3 className="text-xl font-semibold mb-4">Listing (Sell Orders)</h3>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Quantity</TableHead>
-                  <TableHead>Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>$1,000</TableCell>
-                  <TableCell>1</TableCell>
-                  <TableCell>$1,000</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>$1,050</TableCell>
-                  <TableCell>1</TableCell>
-                  <TableCell>$1,050</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Total</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sellOrders.map((order: { entityId: string; price: number; numberOfShares: number }) => (
+                    <TableRow key={order.entityId}>
+                      <TableCell>{order.price} Qubics</TableCell>
+                      <TableCell>{order.numberOfShares}</TableCell>
+                      <TableCell>{order.price * order.numberOfShares} Qubics</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <h3 className="text-xl font-semibold mb-4">Listing (Buy Orders)</h3>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -120,19 +163,17 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                   <TableHead>Total</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>$950</TableCell>
-                  <TableCell>1</TableCell>
-                  <TableCell>$950</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>$900</TableCell>
-                  <TableCell>2</TableCell>
-                  <TableCell>$1,800</TableCell>
-                </TableRow>
-              </TableBody>
+                <TableBody>
+                  {buyOrders.map((order: { entityId: string; price: number; numberOfShares: number }) => (
+                    <TableRow key={order.entityId}>
+                      <TableCell>{order.price}</TableCell>
+                      <TableCell>{order.numberOfShares}</TableCell>
+                      <TableCell>{order.price * order.numberOfShares}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
             </Table>
+              )}
           </div>
         </div>
         <div className="mt-8 bg-white p-6 rounded-lg shadow-sm">
