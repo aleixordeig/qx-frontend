@@ -12,8 +12,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Eye, TrendingUp, DollarSign } from 'lucide-react'
+import { Eye, TrendingUp, DollarSign, ListPlus, ShoppingCart, Tag } from 'lucide-react'
 import Navigation from "@/components/navigation"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function AssetPage({ params }: { params: { id: string } }) {
   const [price, setPrice] = useState('')
@@ -23,7 +32,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
   const [latestPrice, setLatestPrice] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [currentPrice, setCurrentPrice] = useState<number | null>(null) // New state for current price
+  const [currentPrice, setCurrentPrice] = useState(0) // New state for current price
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,35 +106,114 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto p-4">
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h1 className="text-3xl font-bold mb-2">Asset {params.id}</h1>
-          <h2 className="text-2xl font-semibold mb-2">Current Price: $</h2> {/* Updated to use currentPrice */}
-
+          <h2 className="text-2xl font-semibold mb-4">Current Price: ${currentPrice?.toFixed(2) || 'N/A'}</h2>
           
-          <div className="mb-4">
-            <Label htmlFor="list-price">List for sale (if you own the asset)</Label>
-            <div className="flex mt-1">
-              <Input
-                id="list-price"
-                type="number"
-                placeholder="Enter price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="mr-2"
-              />
-              <Button onClick={handleList}>List</Button>
-            </div>
-          </div>
-          <div className="mb-4">
-            <div className="flex space-x-2">
-              <Button onClick={handleBuy}>Buy Now</Button>
-              <Input
-                type="number"
-                placeholder="Offer amount"
-                value={offerPrice}
-                onChange={(e) => setOfferPrice(e.target.value)}
-                className="max-w-[150px]"
-              />
-              <Button variant="outline" onClick={handleMakeOffer}>Make Offer</Button>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>List for Sale</CardTitle>
+                <CardDescription>Set a price to list your asset</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">
+                      <ListPlus className="mr-2 h-4 w-4" /> List Asset
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>List Asset for Sale</DialogTitle>
+                      <DialogDescription>
+                        Enter the price at which you want to list your asset.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="list-price" className="text-right">
+                          Price
+                        </Label>
+                        <Input
+                          id="list-price"
+                          type="number"
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
+                          className="col-span-3"
+                        />
+                      </div>
+                    </div>
+                    <Button onClick={handleList}>List Asset</Button>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Buy Now</CardTitle>
+                <CardDescription>Purchase this asset immediately</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">
+                      <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Confirm Purchase</DialogTitle>
+                      <DialogDescription>
+                        You are about to purchase this asset at the current price.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <p className="text-lg font-semibold">Price: ${currentPrice?.toFixed(2) || 'N/A'}</p>
+                    </div>
+                    <Button onClick={handleBuy}>Confirm Purchase</Button>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Make Offer</CardTitle>
+                <CardDescription>Place a bid on this asset</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">
+                      <Tag className="mr-2 h-4 w-4" /> Make Offer
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Make an Offer</DialogTitle>
+                      <DialogDescription>
+                        Enter the amount you want to offer for this asset.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="offer-amount" className="text-right">
+                          Offer
+                        </Label>
+                        <Input
+                          id="offer-amount"
+                          type="number"
+                          value={offerPrice}
+                          onChange={(e) => setOfferPrice(e.target.value)}
+                          className="col-span-3"
+                        />
+                      </div>
+                    </div>
+                    <Button onClick={handleMakeOffer}>Submit Offer</Button>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
@@ -223,8 +311,8 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                 <TableCell>Offer</TableCell>
                 <TableCell>$950</TableCell>
                 <TableCell>1</TableCell>
-                <TableCell>AAAA</TableCell>
-                <TableCell>BBBB</TableCell>
+                <TableCell>0x2468...1357</TableCell>
+                <TableCell>-</TableCell>
                 <TableCell>2023-09-28 11:22:33</TableCell>
               </TableRow>
             </TableBody>
