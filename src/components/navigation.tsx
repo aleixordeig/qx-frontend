@@ -35,7 +35,7 @@ export default function Navigation() {
   const checkConnectionStatus = async () => {
     const provider = await detectEthereumProvider();
     if (provider) {
-      const accounts = await provider.request({ method: 'eth_accounts' });
+      const accounts = await (provider as any).request({ method: 'eth_accounts' });
       handleAccountsChanged(accounts);
     } else {
       console.error('MetaMask provider not found!');
@@ -54,16 +54,15 @@ export default function Navigation() {
 
   const handleConnectMetamask = async () => {
     const provider = await detectEthereumProvider();
-
     if (provider) {
-      const isFlask = (await provider.request({ method: 'web3_clientVersion' }))?.includes('flask');
+      const isFlask = (await (provider as any).request({ method: 'web3_clientVersion' }))?.includes('flask');
 
       if (isFlask) {
         try {
-          const accounts = await provider.request({ method: 'eth_requestAccounts' });
+          const accounts = await (provider as any).request({ method: 'eth_requestAccounts' });
           handleAccountsChanged(accounts);
 
-          await provider.request({
+          await (provider as any).request({
             method: 'wallet_requestSnaps',
             params: {
               'npm:@qubic-lib/qubic-mm-snap': {},
@@ -92,7 +91,7 @@ export default function Navigation() {
 
     if (provider) {
       try {
-        const publicId = await provider.request({
+        const publicId = await (provider as any).request({
           method: 'wallet_invokeSnap',
           params: {
             snapId: 'npm:@qubic-lib/qubic-mm-snap',
