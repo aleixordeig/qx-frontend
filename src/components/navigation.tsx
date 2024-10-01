@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,27 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { generateKeyPair } from '@/utils/privateKey';
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isConnected, setIsConnected] = useState(false); // Add state for connection status
+
+  useEffect(() => {
+    checkConnectionStatus();
+  }, []);
+
+  const checkConnectionStatus = async () => {
+    const provider = await detectEthereumProvider();
+    if (provider) {
+      const accounts = await provider.request({ method: 'eth_accounts' });
+      if (accounts.length > 0) {
+        console.log('Wallet is already connected:', accounts);
+        setIsConnected(true);
+      } else {
+        console.log('Wallet is not connected');
+      }
+    } else {
+      console.error('MetaMask provider not found!');
+    }
+  };
 
   const handleConnectMetamask = async () => {
     const provider = await detectEthereumProvider();
@@ -37,6 +57,9 @@ export default function Navigation() {
           // Generate key pair
           const keyPair = await generateKeyPair(0);
           console.log('Generated Key Pair:', keyPair);
+
+          // Set connection status to true
+          setIsConnected(true);
         } catch (error) {
           console.error('Failed to install Qubic MetaMask Snap:', error);
         }
@@ -48,7 +71,34 @@ export default function Navigation() {
     }
 
     setIsOpen(false);
-  }
+  };
+
+  const getPublicId = async () => {
+    const provider = await detectEthereumProvider();
+
+    if (provider) {
+      try {
+        const publicId = await provider.request({
+          method: 'wallet_invokeSnap',
+          params: {
+            snapId: 'npm:@qubic-lib/qubic-mm-snap',
+            request: {
+              method: 'getPublicId',
+              params: {
+                accountIdx: 0,
+                confirm: true,
+              },
+            },
+          },
+        });
+        console.log('Public ID:', publicId);
+      } catch (error) {
+        console.error('Failed to get public ID:', error);
+      }
+    } else {
+      console.error('MetaMask provider not found!');
+    }
+  };
 
   const handleConnectWalletConnect = () => {
     // Implement WalletConnect connection logic here
@@ -88,30 +138,24 @@ export default function Navigation() {
 
         {/* Right side */}
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon">
-            <User className="h-5 w-5" />
-          </Button>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="hidden md:inline-flex bg-blue-500 text-white">
-                Connect Wallet
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Connect Wallet</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <Button onClick={handleConnectMetamask} className="flex items-center justify-center gap-2">
-                  Connect with Metamask
-                </Button>
-                <Button onClick={handleConnectWalletConnect} className="flex items-center justify-center gap-2">
-                  <Wallet className="w-6 h-6" />
-                  Connect with WalletConnect
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          {isConnected ? (
+            <>
+              <span className="text-green-500">Wallet Connected</span>
+              <button
+                onClick={getPublicId}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Get Public ID
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={handleConnectMetamask}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Connect Wallet
+            </button>
+          )}
         </div>
       </div>
     </nav>
