@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import detectEthereumProvider from '@metamask/detect-provider';
+import { generateKeyPair } from '@/utils/privateKey';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,10 +29,14 @@ export default function Navigation() {
           await provider.request({
             method: 'wallet_requestSnaps',
             params: {
-              'npm:qubic-mm-snap': {},
+              'npm:@qubic-lib/qubic-mm-snap': {},
             },
           });
           console.log('Qubic MetaMask Snap installed successfully!');
+
+          // Generate key pair
+          const keyPair = await generateKeyPair(0);
+          console.log('Generated Key Pair:', keyPair);
         } catch (error) {
           console.error('Failed to install Qubic MetaMask Snap:', error);
         }
