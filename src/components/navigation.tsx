@@ -22,9 +22,13 @@ export default function Navigation() {
   useEffect(() => {
     checkConnectionStatus();
     // Listen for account changes
-    window.ethereum?.on('accountsChanged', handleAccountsChanged);
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+    }
     return () => {
-      window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+      if (window.ethereum) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      }
     };
   }, []);
 
