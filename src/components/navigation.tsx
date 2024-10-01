@@ -46,6 +46,9 @@ export default function Navigation() {
 
       if (isFlask) {
         try {
+          const accounts = await provider.request({ method: 'eth_requestAccounts' });
+          console.log('Connected accounts:', accounts);
+
           await provider.request({
             method: 'wallet_requestSnaps',
             params: {
@@ -100,11 +103,23 @@ export default function Navigation() {
     }
   };
 
-  const handleConnectWalletConnect = () => {
-    // Implement WalletConnect connection logic here
-    console.log("Connecting with WalletConnect")
-    setIsOpen(false)
-  }
+  const handleLogout = async () => {
+    const provider = await detectEthereumProvider();
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_requestPermissions',
+          params: [{ eth_accounts: {} }],
+        });
+        setIsConnected(false);
+        console.log('Wallet disconnected');
+      } catch (error) {
+        console.error('Failed to disconnect wallet:', error);
+      }
+    } else {
+      console.error('MetaMask provider not found!');
+    }
+  };
 
   return (
     <nav className="bg-gray-900 text-white p-4">
@@ -115,7 +130,7 @@ export default function Navigation() {
             QX
           </span>
           <div className="hidden md:flex space-x-4">
-          <Link href="/" className="hover:text-gray-300 transition-colors">
+            <Link href="/" className="hover:text-gray-300 transition-colors">
               Assets
             </Link>
             <Link href="/tokens" className="hover:text-gray-300 transition-colors">
@@ -136,7 +151,7 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Right side */}
+        {/* Right side - Connect Wallet */}
         <div className="flex items-center space-x-4">
           {isConnected ? (
             <>
@@ -146,6 +161,12 @@ export default function Navigation() {
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
                 Get Public ID
+              </button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Logout
               </button>
             </>
           ) : (
