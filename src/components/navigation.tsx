@@ -17,24 +17,34 @@ import { generateKeyPair } from '@/utils/privateKey';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isConnected, setIsConnected] = useState(false); // Add state for connection status
+  const [accounts, setAccounts] = useState<string[]>([]); // Add state for accounts
 
   useEffect(() => {
     checkConnectionStatus();
+    // Listen for account changes
+    window.ethereum?.on('accountsChanged', handleAccountsChanged);
+    return () => {
+      window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+    };
   }, []);
 
   const checkConnectionStatus = async () => {
     const provider = await detectEthereumProvider();
     if (provider) {
       const accounts = await provider.request({ method: 'eth_accounts' });
-      if (accounts.length > 0) {
-        console.log('Wallet is already connected:', accounts);
-        setIsConnected(true);
-      } else {
-        console.log('Wallet is not connected');
-      }
+      handleAccountsChanged(accounts);
     } else {
       console.error('MetaMask provider not found!');
+    }
+  };
+
+  const handleAccountsChanged = (accounts: string[]) => {
+    if (accounts.length > 0) {
+      console.log('Wallet is connected:', accounts);
+      setAccounts(accounts);
+    } else {
+      console.log('Wallet is not connected');
+      setAccounts([]);
     }
   };
 
@@ -47,7 +57,7 @@ export default function Navigation() {
       if (isFlask) {
         try {
           const accounts = await provider.request({ method: 'eth_requestAccounts' });
-          console.log('Connected accounts:', accounts);
+          handleAccountsChanged(accounts);
 
           await provider.request({
             method: 'wallet_requestSnaps',
@@ -60,9 +70,6 @@ export default function Navigation() {
           // Generate key pair
           const keyPair = await generateKeyPair(0);
           console.log('Generated Key Pair:', keyPair);
-
-          // Set connection status to true
-          setIsConnected(true);
         } catch (error) {
           console.error('Failed to install Qubic MetaMask Snap:', error);
         }
@@ -103,24 +110,6 @@ export default function Navigation() {
     }
   };
 
-  const handleLogout = async () => {
-    const provider = await detectEthereumProvider();
-    if (provider) {
-      try {
-        await provider.request({
-          method: 'wallet_requestPermissions',
-          params: [{ eth_accounts: {} }],
-        });
-        setIsConnected(false);
-        console.log('Wallet disconnected');
-      } catch (error) {
-        console.error('Failed to disconnect wallet:', error);
-      }
-    } else {
-      console.error('MetaMask provider not found!');
-    }
-  };
-
   return (
     <nav className="bg-gray-900 text-white p-4">
       <div className="container mx-auto flex items-center justify-between">
@@ -153,7 +142,7 @@ export default function Navigation() {
 
         {/* Right side - Connect Wallet */}
         <div className="flex items-center space-x-4">
-          {isConnected ? (
+          {accounts.length > 0 ? (
             <>
               <span className="text-green-500">Wallet Connected</span>
               <button
@@ -161,12 +150,6 @@ export default function Navigation() {
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               >
                 Get Public ID
-              </button>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Logout
               </button>
             </>
           ) : (
