@@ -12,14 +12,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import detectEthereumProvider from '@metamask/detect-provider';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleConnectMetamask = () => {
-    // Implement Metamask connection logic here
-    console.log("Connecting with Metamask")
-    setIsOpen(false)
+  const handleConnectMetamask = async () => {
+    const provider = await detectEthereumProvider();
+
+    if (provider) {
+      const isFlask = (await provider.request({ method: 'web3_clientVersion' }))?.includes('flask');
+
+      if (isFlask) {
+        try {
+          await provider.request({
+            method: 'wallet_requestSnaps',
+            params: {
+              'npm:qubic-mm-snap': {},
+            },
+          });
+          console.log('Qubic MetaMask Snap installed successfully!');
+        } catch (error) {
+          console.error('Failed to install Qubic MetaMask Snap:', error);
+        }
+      } else {
+        console.error('Please install MetaMask Flask!');
+      }
+    } else {
+      console.error('MetaMask provider not found!');
+    }
+
+    setIsOpen(false);
   }
 
   const handleConnectWalletConnect = () => {
