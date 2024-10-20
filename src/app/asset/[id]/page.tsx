@@ -332,7 +332,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
             <TableHeader>
               <TableRow>
                 <TableHead>Date</TableHead>
-                <TableHead>Price (Qubic)</TableHead>
+                <TableHead>Price (Qubic) per share</TableHead>
                 <TableHead>Number of Shares</TableHead>
                 <TableHead>Transaction Hash</TableHead>
               </TableRow>
