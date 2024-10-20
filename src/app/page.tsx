@@ -5,16 +5,22 @@ import Link from "next/link"
 import { Filter } from 'lucide-react' // Add this import
 
 // Fetch assets from the API endpoint
-async function fetchAssets() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/assets`); // Use environment variable for the base URL
-  if (!res.ok) {
-    throw new Error('Failed to fetch assets')
-  }
-  return res.json()
+// async function fetchAssets() {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/assets`); // Use environment variable for the base URL
+//   if (!res.ok) {
+//     throw new Error('Failed to fetch assets')
+//   }
+//   return res.json()
+// }
+
+interface Asset {
+  name: string;
+  // Add other properties as needed
 }
 
-export default async function Component() {
-  const assets = await fetchAssets()
+export default function Component() {
+  // const assets = await fetchAssets()
+  const assets: Asset[] = [] // Placeholder for assets
 
   return (
     <>
@@ -40,7 +46,7 @@ export default async function Component() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {assets.map((asset: any) => (
+            {assets.map((asset: Asset) => (
               <Link key={asset.name} href={`/asset/${encodeURIComponent(asset.name)}`}>
                 <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <h2 className="text-xl font-semibold mb-2">{asset.name}</h2>
