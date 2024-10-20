@@ -119,9 +119,10 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto p-4">
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h1 className="text-3xl font-bold mb-2">Asset {params.id}</h1>
-          <h2 className="text-2xl font-semibold mb-4">Buy now: ${currentPrice || 'N/A'}</h2>
+          <h2 className="text-2xl font-semibold mb-4">Buy now: ${currentPrice?.toFixed(2) || 'N/A'}</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Hide the cards of list for sale, buy now, make offer */}
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader>
                 <CardTitle>List for Sale</CardTitle>
@@ -227,7 +228,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                 </Dialog>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
@@ -292,7 +293,8 @@ export default function AssetPage({ params }: { params: { id: string } }) {
               )}
           </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+        {/* Hide the price and volume section */}
+        {/* <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h3 className="text-xl font-semibold mb-4">Price History & Volume</h3>
           <div className="flex items-center mb-2">
             <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
@@ -303,7 +305,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
             <DollarSign className="w-5 h-5 mr-2 text-blue-500" />
             <span className="font-semibold">Volume: $50,000</span>
           </div>
-        </div>
+        </div> */}
         <div className="mt-8 bg-white p-6 rounded-lg shadow-sm">
           <h3 className="text-xl font-semibold mb-4">Order Activity</h3>
           <Table>

@@ -4,7 +4,22 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const name = searchParams.get('name');
-    const response = await fetch(`https://dev.qubic.at:8443/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/ask`);
+    let url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/ask`;
+
+    if (name === 'QFT') {
+      url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/TFUYVBXYIYBVTEMJHAJGEJOOZHJBQFVQLTBBKMEHPEVIZFXZRPEYFUWGTIWG/asset/${name}/orders/ask`;
+    } else if (name === 'CFB') {
+      url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL/asset/${name}/orders/ask`;
+    } else if (name === 'QWALLET') {
+      url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/ask`;
+    }
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
