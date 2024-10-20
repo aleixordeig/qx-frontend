@@ -14,7 +14,11 @@ export async function GET(req: Request) {
       url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/ask`;
     }
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);

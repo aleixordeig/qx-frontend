@@ -14,7 +14,11 @@ export async function GET(req: Request) {
       url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/bid`;
     }
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
@@ -23,8 +27,8 @@ export async function GET(req: Request) {
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error('Error fetching sell orders:', error);
-    return NextResponse.json({ error: 'An error occurred while fetching sell orders.' }, { status: 500 });
+    console.error('Error fetching buy orders:', error);
+    return NextResponse.json({ error: 'An error occurred while fetching buy orders.' }, { status: 500 });
   }
 }
 
