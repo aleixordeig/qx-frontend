@@ -118,9 +118,9 @@ export default function Navigation() {
       <div className="container mx-auto flex items-center justify-between">
         {/* Left side */}
         <div className="flex items-center space-x-6">
-          <span className="text-2xl font-bold">
+          <Link href="/" className="text-2xl font-bold hover:text-gray-300 transition-colors">
             QX
-          </span>
+          </Link>
           <div className="hidden md:flex space-x-4">
             <Link href="/" className="hover:text-gray-300 transition-colors">
               Assets

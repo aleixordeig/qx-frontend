@@ -23,7 +23,7 @@ export default async function Component() {
         <main>
           <h1 className="text-3xl font-bold mb-4">Marketplace of Assets</h1>
           <div className="flex items-center space-x-4 mb-8">
-            <Select>
+            <Select disabled>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by volume" />
               </SelectTrigger>
