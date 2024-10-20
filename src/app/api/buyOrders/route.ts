@@ -7,14 +7,14 @@ export async function GET(req: Request) {
     const name = searchParams.get('name');
 
     // Construct the URL based on the 'name' parameter
-    let url = `https://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`;
+    let url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`;
 
     if (name === 'QFT') {
-      url = `https://dev.qubic.at:8080/api/service/v1/qx/issuer/TFUYVBXYIYBVTEMJHAJGEJOOZHJBQFVQLTBBKMEHPEVIZFXZRPEYFUWGTIWG/asset/${name}/orders/bid`;
+      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/TFUYVBXYIYBVTEMJHAJGEJOOZHJBQFVQLTBBKMEHPEVIZFXZRPEYFUWGTIWG/asset/${name}/orders/bid`;
     } else if (name === 'CFB') {
-      url = `https://dev.qubic.at:8080/api/service/v1/qx/issuer/CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL/asset/${name}/orders/bid`;
+      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL/asset/${name}/orders/bid`;
     } else if (name === 'QWALLET') {
-      url = `https://dev.qubic.at:8080/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/bid`;
+      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/bid`;
     }
 
     // Fetch data from the constructed URL
