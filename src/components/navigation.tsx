@@ -125,9 +125,9 @@ export default function Navigation() {
             <Link href="/" className="hover:text-gray-300 transition-colors">
               Assets
             </Link>
-            <Link href="/tokens" className="hover:text-gray-300 transition-colors">
+            {/* <Link href="/tokens" className="hover:text-gray-300 transition-colors">
               Tokens
-            </Link>
+            </Link> */}
           </div>
         </div>
         
@@ -159,6 +159,7 @@ export default function Navigation() {
             <button
               onClick={handleConnectMetamask}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled
             >
               Connect Wallet
             </button>

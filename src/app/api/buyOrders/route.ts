@@ -4,7 +4,12 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const name = searchParams.get('name');
-    const response = await fetch(`http://95.216.243.140:8080/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`);
+    const response = await fetch(`https://dev.qubic.at:8443/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
@@ -12,3 +17,5 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'An error occurred while fetching sell orders.' }, { status: 500 });
   }
 }
+
+

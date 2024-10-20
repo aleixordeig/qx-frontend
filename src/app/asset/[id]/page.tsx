@@ -130,7 +130,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
               <CardContent>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="w-full">
+                    <Button className="w-full" disabled>
                       <ListPlus className="mr-2 h-4 w-4" /> List Asset
                     </Button>
                   </DialogTrigger>
@@ -155,7 +155,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                         />
                       </div>
                     </div>
-                    <Button onClick={handleList}>List Asset</Button>
+                    <Button onClick={handleList} disabled>List Asset</Button>
                   </DialogContent>
                 </Dialog>
               </CardContent>
@@ -169,7 +169,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
               <CardContent>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="w-full">
+                    <Button className="w-full" disabled>
                       <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                     </Button>
                   </DialogTrigger>
@@ -183,7 +183,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                     <div className="py-4">
                       <p className="text-lg font-semibold">Price: ${currentPrice?.toFixed(2) || 'N/A'}</p>
                     </div>
-                    <Button onClick={handleBuy}>Confirm Purchase</Button>
+                    <Button onClick={handleBuy} disabled>Confirm Purchase</Button>
                   </DialogContent>
                 </Dialog>
               </CardContent>
@@ -197,7 +197,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
               <CardContent>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button className="w-full">
+                    <Button className="w-full" disabled>
                       <Tag className="mr-2 h-4 w-4" /> Make Offer
                     </Button>
                   </DialogTrigger>
@@ -222,7 +222,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                         />
                       </div>
                     </div>
-                    <Button onClick={handleMakeOffer}>Submit Offer</Button>
+                    <Button onClick={handleMakeOffer} disabled>Submit Offer</Button>
                   </DialogContent>
                 </Dialog>
               </CardContent>
@@ -254,7 +254,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
                       <TableCell>{order.numberOfShares}</TableCell>
                       <TableCell>${(order.price * order.numberOfShares * latestPrice).toFixed((order.price * order.numberOfShares * latestPrice) % 1 === 0 ? 0 : 2)} USD</TableCell>
                       <TableCell>
-                        <Button onClick={handleBuy}>
+                        <Button onClick={handleBuy} disabled>
                           <ShoppingCart className="mr-2 h-4 w-4" /> Buy Now
                         </Button>
                       </TableCell>
