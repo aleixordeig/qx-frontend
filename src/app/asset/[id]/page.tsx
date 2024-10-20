@@ -33,12 +33,15 @@ export default function AssetPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [currentPrice, setCurrentPrice] = useState(0) // New state for current price
+  const [tradeActivity, setTradeActivity] = useState([]) // New state for trade activity
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await fetchAndCalculateCurrentPrice(params.id)
         await fetchBuyOrders(params.id)
+        const activity = await fetchTradeActivity(params.id) // Fetch trade activity
+        setTradeActivity(activity) // Set trade activity
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -98,6 +101,19 @@ export default function AssetPage({ params }: { params: { id: string } }) {
     }
   }
 
+  const fetchTradeActivity = async (name: string) => {
+    try {
+      const response = await fetch(`/api/tradeActivity/${name}`);
+      const data = await response.json();
+      console.log('Trade Activity:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching trade activity:', error);
+      return [];
+    }
+  };
+  
+
   const handleList = () => {
     console.log(`Listing asset for ${price}`)
     // Implement listing logic here
@@ -120,7 +136,11 @@ export default function AssetPage({ params }: { params: { id: string } }) {
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h1 className="text-3xl font-bold mb-2">Asset {params.id}</h1>
           <h2 className="text-2xl font-semibold mb-4">Buy now: ${currentPrice?.toFixed(2) || 'N/A'}</h2>
-          
+          <p className="text-lg font-semibold">Price in Qubic: {currentPrice ? 
+            (currentPrice / latestPrice >= 1e9 ? `${(currentPrice / latestPrice / 1e9).toFixed(2)} Billion` :
+            currentPrice / latestPrice >= 1e6 ? `${(currentPrice / latestPrice / 1e6).toFixed(2)} Million` :
+            currentPrice / latestPrice >= 1e3 ? `${(currentPrice / latestPrice / 1e3).toFixed(2)} Thousand` :
+            (currentPrice / latestPrice).toFixed(2)) : 'N/A'}</p>
           {/* Hide the cards of list for sale, buy now, make offer */}
           {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
@@ -311,31 +331,33 @@ export default function AssetPage({ params }: { params: { id: string } }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>From</TableHead>
-                <TableHead>To</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Price (Qubic)</TableHead>
+                <TableHead>Number of Shares</TableHead>
+                <TableHead>Transaction Hash</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Sale</TableCell>
-                <TableCell>$1,000</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>AAAA</TableCell>
-                <TableCell>BBBB</TableCell>
-                <TableCell>2023-09-28 12:34:56</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Offer</TableCell>
-                <TableCell>$950</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0x2468...1357</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell>2023-09-28 11:22:33</TableCell>
-              </TableRow>
+              {tradeActivity.map((trade: any) => (
+                <TableRow key={trade.transactionHash}>
+                  <TableCell>{new Date(trade.tickTime).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {trade.price >= 1e9
+                      ? `${(trade.price / 1e9).toFixed(2)} Billion`
+                      : trade.price >= 1e6
+                      ? `${(trade.price / 1e6).toFixed(2)} Million`
+                      : trade.price >= 1e3
+                      ? `${(trade.price / 1e3).toFixed(2)} Thousand`
+                      : trade.price}
+                  </TableCell>
+                  <TableCell>{trade.numberOfShares}</TableCell>
+                  <TableCell>
+                    <a href={`https://explorer.qubic.org/network/tx/${trade.transactionHash}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                      Explorer link transaction
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
