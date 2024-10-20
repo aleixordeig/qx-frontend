@@ -135,7 +135,7 @@ export default function AssetPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto p-4">
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <h1 className="text-3xl font-bold mb-2">Asset {params.id}</h1>
-          <h2 className="text-2xl font-semibold mb-4">Buy now: ${currentPrice?.toFixed(2) || 'N/A'}</h2>
+          <h2 className="text-2xl font-semibold mb-4">Buy now: ${currentPrice?.toFixed(2) || 'N/A'} USD</h2>
           <p className="text-lg font-semibold">Price in Qubic: {currentPrice ? 
             (currentPrice / latestPrice >= 1e9 ? `${(currentPrice / latestPrice / 1e9).toFixed(2)} Billion` :
             currentPrice / latestPrice >= 1e6 ? `${(currentPrice / latestPrice / 1e6).toFixed(2)} Million` :
