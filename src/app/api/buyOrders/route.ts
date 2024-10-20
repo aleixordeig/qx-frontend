@@ -2,11 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
-    // Use headers to pass the 'name' parameter
-    const name = req.headers.get('x-asset-name');
-    if (!name) {
-      throw new Error('Asset name is required');
-    }
+    // Extract search parameters from the request URL
+    const { searchParams } = new URL(req.url);
+    const name = searchParams.get('name');
 
     // Construct the URL based on the 'name' parameter
     let url = `https://dev.qubic.at:8443/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`;
@@ -39,3 +37,5 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'An error occurred while fetching buy orders.' }, { status: 500 });
   }
 }
+
+export const dynamic = 'force-dynamic';
