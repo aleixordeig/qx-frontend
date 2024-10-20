@@ -4,7 +4,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const name = searchParams.get('name');
-    let url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/ask`;
+    let url ;
 
     if (name === 'QFT') {
       url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/TFUYVBXYIYBVTEMJHAJGEJOOZHJBQFVQLTBBKMEHPEVIZFXZRPEYFUWGTIWG/asset/${name}/orders/ask`;
@@ -12,6 +12,8 @@ export async function GET(req: Request) {
       url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL/asset/${name}/orders/ask`;
     } else if (name === 'QWALLET') {
       url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/ask`;
+    }else {
+      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/ask`;
     }
 
     const response = await fetch(url, {
@@ -32,4 +34,3 @@ export async function GET(req: Request) {
   }
 }
 
-export const dynamic = 'force-dynamic';
