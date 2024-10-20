@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export async function GET(request: Request, { params }: { params: { name: string } }) {
   try {
-    // Extract search parameters from the request URL
-    const { searchParams } = new URL(req.url);
-    const name = searchParams.get('name');
-
-    // Construct the URL based on the 'name' parameter
+    const { name } = params;
     let url;
 
     if (name === 'QFT') {
@@ -19,19 +15,16 @@ export async function GET(req: Request) {
       url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/bid`;
     }
 
-    // Fetch data from the constructed URL
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Check if the response is successful
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
 
-    // Parse the response data
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

@@ -50,27 +50,27 @@ export default function AssetPage({ params }: { params: { id: string } }) {
 
   const fetchSellOrders = async (name: string) => {
     try {
-      const response = await fetch(`/api/sellOrders?name=${name}`)
-      const data = await response.json()
-      console.log('Sell Orders:', data); // Log the data to verify
-      setSellOrders(data)
-      return data
+      const response = await fetch(`/api/sellOrders/${name}`);
+      const data = await response.json();
+      console.log('Sell Orders:', data);
+      setSellOrders(data);
+      return data;
     } catch (error) {
-      console.error('Error fetching sell orders:', error)
-      return []
+      console.error('Error fetching sell orders:', error);
+      return [];
     }
-  }
+  };
 
   const fetchBuyOrders = async (name: string) => {
     try {
-      const response = await fetch(`/api/buyOrders?name=${name}`)
-      const data = await response.json()
-      console.log('Buy Orders:', data); // Log the data to verify
-      setBuyOrders(data)
+      const response = await fetch(`/api/buyOrders/${name}`);
+      const data = await response.json();
+      console.log('Buy Orders:', data);
+      setBuyOrders(data);
     } catch (error) {
-      console.error('Error fetching buy orders:', error)
+      console.error('Error fetching buy orders:', error);
     }
-  }
+  };
 
   const fetchLatestStats = async () => {
     try {
