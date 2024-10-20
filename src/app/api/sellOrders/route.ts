@@ -1,27 +1,21 @@
 import { NextResponse } from 'next/server';
+import { getAssetUrl } from '@/utils/urlHelper';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const name = searchParams.get('name');
-    let url ;
-
-    if (name === 'QFT') {
-      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/TFUYVBXYIYBVTEMJHAJGEJOOZHJBQFVQLTBBKMEHPEVIZFXZRPEYFUWGTIWG/asset/${name}/orders/ask`;
-    } else if (name === 'CFB') {
-      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/CFBMEMZOIDEXQAUXYYSZIURADQLAPWPMNJXQSNVQZAHYVOPYUKKJBJUCTVJL/asset/${name}/orders/ask`;
-    } else if (name === 'QWALLET') {
-      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/QWALLETSGQVAGBHUCVVXWZXMBKQBPQQSHRYKZGEJWFVNUFCEDDPRMKTAUVHA/asset/${name}/orders/ask`;
-    }else {
-      url = `http://dev.qubic.at:8080/api/service/v1/qx/issuer/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFXIB/asset/${name}/orders/ask`;
+    if (name === null) {
+      throw new Error('Name parameter is missing');
     }
+    const url = getAssetUrl(name);
 
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
@@ -33,4 +27,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'An error occurred while fetching sell orders.' }, { status: 500 });
   }
 }
-
